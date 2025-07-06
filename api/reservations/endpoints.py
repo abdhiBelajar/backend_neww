@@ -36,7 +36,9 @@ def create_reservation():
     # Hitung nomor antrian otomatis
     from datetime import datetime
     tanggal_obj = datetime.fromisoformat(tanggal_reservasi)
-    jumlah_antrian = db.session.query(Queue).join(Reservation).filter(
+    jumlah_antrian = db.session.query(Queue).join(
+        Reservation, Queue.id_reservasi == Reservation.id_reservasi
+    ).filter(
         Reservation.id_puskesmas == id_puskesmas,
         Reservation.id_layanan == id_layanan,
         db.func.date(Reservation.tanggal_reservasi) == tanggal_obj.date()
@@ -76,4 +78,4 @@ def delete_reservation(id_reservasi):
     r = Reservation.query.get_or_404(id_reservasi)
     db.session.delete(r)
     db.session.commit()
-    return jsonify({'message': 'Reservation deleted'}) 
+    return jsonify({'message': 'Reservation deleted'})
