@@ -1,0 +1,772 @@
+{
+  "info": {
+    "_postman_id": "health-api-collection-001",
+    "name": "Health API Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/users/",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "users", ""]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/users/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "users", "1"]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"testpass\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/users/",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "users", ""]
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"updateduser\",\n  \"password\": \"updatedpass\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/users/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "users", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/users/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "users", "1"]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        },
+        {
+          "name": "Login User (JWT)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"testpass\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/users/login",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "users", "login"]
+            }
+          }
+        },
+        {
+          "name": "Register User (JWT)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"testpass\",\n  \"tipe_user\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/users/register",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "users", "register"]
+            }
+          }
+        },
+        {
+          "name": "Refresh Token (JWT)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer <refresh_token>" }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/users/refresh",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "users", "refresh"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "Get All Notifications",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/notifications/",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "notifications", ""]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        },
+        {
+          "name": "Get Notification by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/notifications/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "notifications", "1"]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        },
+        {
+          "name": "Create Notification",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_user\": 1,\n  \"pesan\": \"Notifikasi baru\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/notifications/",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "notifications", ""]
+            }
+          }
+        },
+        {
+          "name": "Update Notification",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pesan\": \"Notifikasi diupdate\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/notifications/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "notifications", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Notification",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/notifications/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "notifications", "1"]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservations",
+      "item": [
+        {
+          "name": "Get All Reservations",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/reservations/",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "reservations", ""]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        },
+        {
+          "name": "Get Reservation by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/reservations/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "reservations", "1"]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        },
+        {
+          "name": "Create Reservation",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_user\": 1,\n  \"id_puskesmas\": 1,\n  \"id_layanan\": 1,\n  \"tanggal_reservasi\": \"2024-06-01T10:00:00\",\n  \"status\": \"pending\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/reservations/",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "reservations", ""]
+            }
+          }
+        },
+        {
+          "name": "Update Reservation",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"confirmed\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/reservations/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "reservations", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Reservation",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/reservations/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "reservations", "1"]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Services",
+      "item": [
+        {
+          "name": "Get All Services",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/services/",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "services", ""]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        },
+        {
+          "name": "Get Service by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/services/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "services", "1"]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        },
+        {
+          "name": "Create Service",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama_layanan\": \"Layanan A\",\n  \"deskripsi\": \"Deskripsi layanan\",\n  \"tarif\": \"10000.00\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/services/",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "services", ""]
+            }
+          }
+        },
+        {
+          "name": "Update Service",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama_layanan\": \"Layanan B\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/services/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "services", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Service",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/services/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "services", "1"]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Queues",
+      "item": [
+        {
+          "name": "Get All Queues",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/queues/",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "queues", ""]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        },
+        {
+          "name": "Get Queue by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/queues/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "queues", "1"]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        },
+        {
+          "name": "Create Queue",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_reservasi\": 1,\n  \"nomor_antrian\": 1,\n  \"waktu_antrian\": \"10:00:00\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/queues/",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "queues", ""]
+            }
+          }
+        },
+        {
+          "name": "Update Queue",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"nomor_antrian\": 2\n}" },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/queues/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "queues", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Queue",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/queues/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "queues", "1"]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health Centers",
+      "item": [
+        {
+          "name": "Get All Health Centers",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/health_centers/",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "health_centers", ""]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        },
+        {
+          "name": "Get Health Center by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/health_centers/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "health_centers", "1"]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        },
+        {
+          "name": "Create Health Center",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama_puskesmas\": \"Puskesmas A\",\n  \"alamat\": \"Alamat\",\n  \"jam_operasional\": \"2024-06-01T08:00:00\",\n  \"nomor_kontak\": \"08123456789\",\n  \"id_dokter\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/health_centers/",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "health_centers", ""]
+            }
+          }
+        },
+        {
+          "name": "Update Health Center",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama_puskesmas\": \"Puskesmas B\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/health_centers/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "health_centers", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Health Center",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/health_centers/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "health_centers", "1"]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Doctors",
+      "item": [
+        {
+          "name": "Get All Doctors",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/doctors/",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "doctors", ""]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        },
+        {
+          "name": "Get Doctor by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/doctors/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "doctors", "1"]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        },
+        {
+          "name": "Create Doctor",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nomor_str\": \"STR123\",\n  \"nama_dokter\": \"Dr. A\",\n  \"spesialis\": \"Umum\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/doctors/",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "doctors", ""]
+            }
+          }
+        },
+        {
+          "name": "Update Doctor",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama_dokter\": \"Dr. B\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/doctors/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "doctors", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Doctor",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/doctors/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "doctors", "1"]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Doctor Schedules",
+      "item": [
+        {
+          "name": "Get All Doctor Schedules",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/doctor_schedules/",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "doctor_schedules", ""]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        },
+        {
+          "name": "Get Doctor Schedule by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/doctor_schedules/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "doctor_schedules", "1"]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        },
+        {
+          "name": "Create Doctor Schedule",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nomor_str\": \"STR123\",\n  \"hari\": \"Senin\",\n  \"jam_mulai\": \"08:00:00\",\n  \"jam_selesai\": \"12:00:00\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/doctor_schedules/",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "doctor_schedules", ""]
+            }
+          }
+        },
+        {
+          "name": "Update Doctor Schedule",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"hari\": \"Selasa\"\n}" },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/doctor_schedules/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "doctor_schedules", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Doctor Schedule",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:5000/api/v1/doctor_schedules/1",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "doctor_schedules", "1"]
+            },
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Protected",
+      "item": [
+        {
+          "name": "Get Protected Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer <access_token>" }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/protected/profile",
+              "host": ["http://localhost:5000"],
+              "path": ["api", "v1", "protected", "profile"]
+            },
+            "description": "Endpoint ini mengembalikan data profile user yang sedang login. Response akan berbeda sesuai role user (admin, staff, patien)."
+          },
+          "response": [
+            {
+              "name": "Admin Example",
+              "originalRequest": {},
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Welcome, Admin! You have full access.\",\n  \"user_logged\": {\n    \"id_user\": 1,\n    \"username\": \"adminuser\",\n    \"tipe_user\": \"admin\"\n  },\n  \"roles\": [\"admin\"]\n}"
+            },
+            {
+              "name": "Staff Example",
+              "originalRequest": {},
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Welcome, Staff! You have staff-level access.\",\n  \"user_logged\": {\n    \"id_user\": 2,\n    \"username\": \"staffuser\",\n    \"tipe_user\": \"staff\"\n  },\n  \"roles\": [\"staff\"]\n}"
+            },
+            {
+              "name": "Patien Example",
+              "originalRequest": {},
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Welcome, Patient! You have patient-level access.\",\n  \"user_logged\": {\n    \"id_user\": 3,\n    \"username\": \"patienuser\",\n    \"tipe_user\": \"patien\"\n  },\n  \"roles\": [\"patien\"]\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
