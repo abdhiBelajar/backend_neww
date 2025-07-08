@@ -1,20 +1,47 @@
 from flask import Blueprint, request, jsonify
-from models import db, Queue, Reservation
-from datetime import datetime
+from models import db, Queue, Reservation, Service, HealthCenter, Doctor
 
-queues_bp = Blueprint('queues', __name__)
+queues_bp = Blueprint('queues', __name__, url_prefix=None)
 
-@queues_bp.route('/', methods=['GET'])
+@queues_bp.route('/', methods=['GET', 'OPTIONS'], strict_slashes=False)
 def get_queues():
     queues = Queue.query.all()
     return jsonify([{'id_antrian': q.id_antrian, 'id_reservasi': q.id_reservasi, 'nomor_antrian': q.nomor_antrian, 'waktu_antrian': str(q.waktu_antrian)} for q in queues])
 
-@queues_bp.route('/<int:id_antrian>', methods=['GET'])
+@queues_bp.route('/<int:id_antrian>', methods=['GET', 'OPTIONS'], strict_slashes=False)
 def get_queue(id_antrian):
     q = Queue.query.get_or_404(id_antrian)
     return jsonify({'id_antrian': q.id_antrian, 'id_reservasi': q.id_reservasi, 'nomor_antrian': q.nomor_antrian, 'waktu_antrian': str(q.waktu_antrian)})
 
-@queues_bp.route('/', methods=['POST'])
+@queues_bp.route('/<int:id_user>', methods=['GET', 'OPTIONS'], strict_slashes=False)
+def get_queues_by_user(id_user):
+    # Ambil semua queue milik user ini
+    queues = (
+        db.session.query(Queue, Reservation, Service, HealthCenter, Doctor)
+        .join(Reservation, Queue.id_reservasi == Reservation.id_reservasi)
+        .join(Service, Reservation.id_layanan == Service.id_layanan)
+        .join(HealthCenter, Reservation.id_puskesmas == HealthCenter.kode_faskes)
+        .join(Doctor, HealthCenter.id_dokter == Doctor.id_dokter)
+        .filter(Reservation.id_user == id_user)
+        .all()
+    )
+    print('DEBUG queues:', queues)  # Debug print
+    result = []
+    for q, r, s, p, d in queues:
+        result.append({
+            'id_antrian': q.id_antrian,
+            'id_reservasi': q.id_reservasi,
+            'nomor_antrian': q.nomor_antrian,
+            'waktu_antrian': str(q.waktu_antrian),
+            'status': r.status,
+            'tanggal_reservasi': r.tanggal_reservasi.strftime('%Y-%m-%d %H:%M:%S'),
+            'nama_layanan': s.nama_layanan,
+            'nama_puskesmas': p.nama_puskesmas,
+            'nama_dokter': d.nama_dokter
+        })
+    return jsonify(result)  # Selalu array, meskipun kosong atau satu data
+
+@queues_bp.route('/', methods=['POST', 'OPTIONS'], strict_slashes=False)
 def create_queue():
     data = request.json
     id_reservasi = data['id_reservasi']
@@ -45,7 +72,7 @@ def create_queue():
         'id_reservasi': reservasi.id_reservasi
     }), 201
 
-@queues_bp.route('/<int:id_antrian>', methods=['PUT'])
+@queues_bp.route('/<int:id_antrian>', methods=['PUT', 'OPTIONS'], strict_slashes=False)
 def update_queue(id_antrian):
     q = Queue.query.get_or_404(id_antrian)
     data = request.json
@@ -55,9 +82,9 @@ def update_queue(id_antrian):
     db.session.commit()
     return jsonify({'id_antrian': q.id_antrian})
 
-@queues_bp.route('/<int:id_antrian>', methods=['DELETE'])
+@queues_bp.route('/<int:id_antrian>', methods=['DELETE', 'OPTIONS'], strict_slashes=False)
 def delete_queue(id_antrian):
     q = Queue.query.get_or_404(id_antrian)
     db.session.delete(q)
     db.session.commit()
-    return jsonify({'message': 'Queue deleted'}) 
+    return jsonify({'message': 'Queue deleted'})

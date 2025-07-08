@@ -1,19 +1,19 @@
 from flask import Blueprint, request, jsonify
 from models import db, Doctor
 
-doctors_bp = Blueprint('doctors', __name__)
+doctors_bp = Blueprint('doctors', __name__, url_prefix=None)
 
-@doctors_bp.route('/', methods=['GET'])
+@doctors_bp.route('/', methods=['GET', 'OPTIONS'], strict_slashes=False)
 def get_doctors():
     doctors = Doctor.query.all()
     return jsonify([{'id_dokter': d.id_dokter, 'nomor_str': d.nomor_str, 'nama_dokter': d.nama_dokter, 'spesialis': d.spesialis} for d in doctors])
 
-@doctors_bp.route('/<int:id_dokter>', methods=['GET'])
+@doctors_bp.route('/<int:id_dokter>', methods=['GET', 'OPTIONS'], strict_slashes=False)
 def get_doctor(id_dokter):
     d = Doctor.query.get_or_404(id_dokter)
     return jsonify({'id_dokter': d.id_dokter, 'nomor_str': d.nomor_str, 'nama_dokter': d.nama_dokter, 'spesialis': d.spesialis})
 
-@doctors_bp.route('/', methods=['POST'])
+@doctors_bp.route('/', methods=['POST', 'OPTIONS'], strict_slashes=False)
 def create_doctor():
     data = request.json
     d = Doctor(
@@ -25,7 +25,7 @@ def create_doctor():
     db.session.commit()
     return jsonify({'id_dokter': d.id_dokter}), 201
 
-@doctors_bp.route('/<int:id_dokter>', methods=['PUT'])
+@doctors_bp.route('/<int:id_dokter>', methods=['PUT', 'OPTIONS'], strict_slashes=False)
 def update_doctor(id_dokter):
     d = Doctor.query.get_or_404(id_dokter)
     data = request.json
@@ -35,7 +35,7 @@ def update_doctor(id_dokter):
     db.session.commit()
     return jsonify({'id_dokter': d.id_dokter})
 
-@doctors_bp.route('/<int:id_dokter>', methods=['DELETE'])
+@doctors_bp.route('/<int:id_dokter>', methods=['DELETE', 'OPTIONS'], strict_slashes=False)
 def delete_doctor(id_dokter):
     d = Doctor.query.get_or_404(id_dokter)
     db.session.delete(d)

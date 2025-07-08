@@ -1,21 +1,26 @@
 from flask import Blueprint, request, jsonify
 from models import db, Reservation, Queue
 
-reservations_bp = Blueprint('reservations', __name__)
+reservations_bp = Blueprint('reservations', __name__, url_prefix=None)
 
-@reservations_bp.route('/', methods=['GET'])
+@reservations_bp.route('/', methods=['GET', 'OPTIONS'], strict_slashes=False)
 def get_reservations():
     reservations = Reservation.query.all()
     return jsonify([{'id_reservasi': r.id_reservasi, 'id_user': r.id_user, 'id_puskesmas': r.id_puskesmas, 'id_layanan': r.id_layanan, 'id_antrian': r.id_antrian, 'tanggal_reservasi': r.tanggal_reservasi, 'status': r.status} for r in reservations])
 
-@reservations_bp.route('/<int:id_reservasi>', methods=['GET'])
+@reservations_bp.route('/<int:id_reservasi>', methods=['GET', 'OPTIONS'], strict_slashes=False)
 def get_reservation(id_reservasi):
     r = Reservation.query.get_or_404(id_reservasi)
     return jsonify({'id_reservasi': r.id_reservasi, 'id_user': r.id_user, 'id_puskesmas': r.id_puskesmas, 'id_layanan': r.id_layanan, 'id_antrian': r.id_antrian, 'tanggal_reservasi': r.tanggal_reservasi, 'status': r.status})
 
-@reservations_bp.route('/', methods=['POST'])
+@reservations_bp.route('/', methods=['POST', 'OPTIONS'], strict_slashes=False)
 def create_reservation():
     data = request.json
+    required_fields = ['id_user', 'id_puskesmas', 'id_layanan', 'tanggal_reservasi', 'status']
+    for field in required_fields:
+        if field not in data:
+            return jsonify({'error': f'{field} wajib diisi'}), 400
+
     id_user = data['id_user']
     id_puskesmas = data['id_puskesmas']
     id_layanan = data['id_layanan']
@@ -36,7 +41,9 @@ def create_reservation():
     # Hitung nomor antrian otomatis
     from datetime import datetime
     tanggal_obj = datetime.fromisoformat(tanggal_reservasi)
-    jumlah_antrian = db.session.query(Queue).join(Reservation).filter(
+    jumlah_antrian = db.session.query(Queue).join(
+        Reservation, Queue.id_reservasi == Reservation.id_reservasi
+    ).filter(
         Reservation.id_puskesmas == id_puskesmas,
         Reservation.id_layanan == id_layanan,
         db.func.date(Reservation.tanggal_reservasi) == tanggal_obj.date()
@@ -56,9 +63,12 @@ def create_reservation():
     r.id_antrian = q.id_antrian
     db.session.commit()
 
-    return jsonify({'id_reservasi': r.id_reservasi, 'id_antrian': q.id_antrian, 'nomor_antrian': q.nomor_antrian}), 201
+    return jsonify({
+        'message': 'Reservasi berhasil',
+        'nomor_antrian': q.nomor_antrian
+    }), 201
 
-@reservations_bp.route('/<int:id_reservasi>', methods=['PUT'])
+@reservations_bp.route('/<int:id_reservasi>', methods=['PUT', 'OPTIONS'], strict_slashes=False)
 def update_reservation(id_reservasi):
     r = Reservation.query.get_or_404(id_reservasi)
     data = request.json
@@ -71,9 +81,9 @@ def update_reservation(id_reservasi):
     db.session.commit()
     return jsonify({'id_reservasi': r.id_reservasi})
 
-@reservations_bp.route('/<int:id_reservasi>', methods=['DELETE'])
+@reservations_bp.route('/<int:id_reservasi>', methods=['DELETE', 'OPTIONS'], strict_slashes=False)
 def delete_reservation(id_reservasi):
     r = Reservation.query.get_or_404(id_reservasi)
     db.session.delete(r)
     db.session.commit()
-    return jsonify({'message': 'Reservation deleted'}) 
+    return jsonify({'message': 'Reservation deleted'})

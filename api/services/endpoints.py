@@ -1,19 +1,19 @@
 from flask import Blueprint, request, jsonify
 from models import db, Service
 
-services_bp = Blueprint('services', __name__)
+services_bp = Blueprint('services', __name__, url_prefix=None)
 
-@services_bp.route('/', methods=['GET'])
+@services_bp.route('/', methods=['GET', 'OPTIONS'], strict_slashes=False)
 def get_services():
     services = Service.query.all()
     return jsonify([{'id_layanan': s.id_layanan, 'nama_layanan': s.nama_layanan, 'deskripsi': s.deskripsi, 'tarif': str(s.tarif)} for s in services])
 
-@services_bp.route('/<int:id_layanan>', methods=['GET'])
+@services_bp.route('/<int:id_layanan>', methods=['GET', 'OPTIONS'], strict_slashes=False)
 def get_service(id_layanan):
     s = Service.query.get_or_404(id_layanan)
     return jsonify({'id_layanan': s.id_layanan, 'nama_layanan': s.nama_layanan, 'deskripsi': s.deskripsi, 'tarif': str(s.tarif)})
 
-@services_bp.route('/', methods=['POST'])
+@services_bp.route('/', methods=['POST', 'OPTIONS'], strict_slashes=False)
 def create_service():
     data = request.json
     s = Service(
@@ -25,7 +25,7 @@ def create_service():
     db.session.commit()
     return jsonify({'id_layanan': s.id_layanan}), 201
 
-@services_bp.route('/<int:id_layanan>', methods=['PUT'])
+@services_bp.route('/<int:id_layanan>', methods=['PUT', 'OPTIONS'], strict_slashes=False)
 def update_service(id_layanan):
     s = Service.query.get_or_404(id_layanan)
     data = request.json
@@ -35,7 +35,7 @@ def update_service(id_layanan):
     db.session.commit()
     return jsonify({'id_layanan': s.id_layanan})
 
-@services_bp.route('/<int:id_layanan>', methods=['DELETE'])
+@services_bp.route('/<int:id_layanan>', methods=['DELETE', 'OPTIONS'], strict_slashes=False)
 def delete_service(id_layanan):
     s = Service.query.get_or_404(id_layanan)
     db.session.delete(s)
