@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from models import db, Reservation, Queue, HealthCenter
+from models import db, Reservation, Queue, HealthCenterStaff, HealthCenter, User
 
 reservations_bp = Blueprint('reservations', __name__, url_prefix=None)
 
@@ -78,9 +78,9 @@ def create_reservation():
 def update_reservation(id_reservasi):
     r = Reservation.query.get_or_404(id_reservasi)
     data = request.json
-    # Jika status ingin di-cancel, hanya update status saja
-    if data.get('status') == 'cancelled':
-        r.status = 'cancelled'
+    # Jika status ingin diubah ke cancelled atau confirmed, update status saja
+    if data.get('status') in ['cancelled', 'confirmed']:
+        r.status = data['status']
         db.session.commit()
         return jsonify({'id_reservasi': r.id_reservasi, 'status': r.status})
     # Hanya izinkan update tanggal_reservasi (reschedule)
@@ -110,3 +110,21 @@ def delete_reservation(id_reservasi):
     db.session.delete(r)
     db.session.commit()
     return jsonify({'message': 'Reservation deleted'})
+
+@reservations_bp.route('/staff/<int:id_user>', methods=['GET', 'OPTIONS'], strict_slashes=False)
+def get_reservations_for_staff(id_user):
+    # Ambil semua id_puskesmas yang di-assign ke staff ini
+    assigned_puskesmas = db.session.query(HealthCenterStaff.id_puskesmas).filter_by(id_user=id_user).all()
+    puskesmas_ids = [p[0] for p in assigned_puskesmas]
+    # Ambil semua reservasi untuk puskesmas-puskesmas tersebut
+    reservations = Reservation.query.filter(Reservation.id_puskesmas.in_(puskesmas_ids)).all()
+    # Kembalikan data reservasi (bisa join ke tabel lain jika perlu)
+    return jsonify([
+        {
+            'id_reservasi': r.id_reservasi,
+            'id_user': r.id_user,
+            'id_puskesmas': r.id_puskesmas,
+            'tanggal_reservasi': r.tanggal_reservasi.strftime('%Y-%m-%d %H:%M:%S'),
+            'status': r.status
+        } for r in reservations
+    ])

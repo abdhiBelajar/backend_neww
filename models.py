@@ -75,4 +75,10 @@ class DoctorSchedule(db.Model):
     nomor_str = db.Column(db.String(255), db.ForeignKey('doctors.nomor_str'), nullable=False)
     hari = db.Column(db.Enum('Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'), nullable=False)
     jam_mulai = db.Column(db.Time, nullable=False)
-    jam_selesai = db.Column(db.Time, nullable=False) 
+    jam_selesai = db.Column(db.Time, nullable=False)
+
+class HealthCenterStaff(db.Model):
+    __tablename__ = 'health_center_staff'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id_puskesmas = db.Column(db.Integer, db.ForeignKey('health_centers.id_puskesmas'), nullable=False)
+    id_user = db.Column(db.BigInteger, db.ForeignKey('users.id_user'), nullable=False) 
