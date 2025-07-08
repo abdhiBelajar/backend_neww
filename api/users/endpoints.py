@@ -86,3 +86,9 @@ def refresh():
     identity = get_jwt_identity()
     access_token = create_access_token(identity=identity)
     return jsonify({'access_token': access_token}) 
+
+# Endpoint logout
+@users_bp.route('/api/auth/logout', methods=['POST'])
+def logout():
+    # Tidak perlu melakukan apapun, cukup response sukses
+    return jsonify({"message": "Logout successful"}), 200 

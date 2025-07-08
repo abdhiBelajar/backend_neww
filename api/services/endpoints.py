@@ -16,6 +16,10 @@ def get_service(id_layanan):
 @services_bp.route('/', methods=['POST', 'OPTIONS'], strict_slashes=False)
 def create_service():
     data = request.json
+    # Cek apakah nama_layanan sudah ada
+    existing = Service.query.filter_by(nama_layanan=data['nama_layanan']).first()
+    if existing:
+        return jsonify({'error': 'Nama layanan sudah ada, gunakan nama lain.'}), 400
     s = Service(
         nama_layanan=data['nama_layanan'],
         deskripsi=data.get('deskripsi'),

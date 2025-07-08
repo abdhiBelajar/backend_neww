@@ -51,10 +51,11 @@ class Queue(db.Model):
 
 class HealthCenter(db.Model):
     __tablename__ = 'health_centers'
-    kode_faskes = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id_puskesmas = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    kode_faskes = db.Column(db.Integer, nullable=False)
     nama_puskesmas = db.Column(db.String(255), nullable=False)
     alamat = db.Column(db.String(255), nullable=False)
-    jam_operasional = db.Column(db.DateTime, nullable=True)
+    jam_operasional = db.Column(db.JSON, nullable=True)
     nomor_kontak = db.Column(db.Text, nullable=True)
     id_dokter = db.Column(db.Integer, db.ForeignKey('doctors.id_dokter'), nullable=True)
     reservations = relationship('Reservation', backref='health_center', lazy=True)

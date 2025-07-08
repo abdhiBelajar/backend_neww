@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from models import db, Reservation, Queue
+from models import db, Reservation, Queue, HealthCenter
 
 reservations_bp = Blueprint('reservations', __name__, url_prefix=None)
 
@@ -26,6 +26,10 @@ def create_reservation():
     id_layanan = data['id_layanan']
     tanggal_reservasi = data['tanggal_reservasi']
     status = data['status']
+
+    # Validasi id_puskesmas harus ada di tabel health_centers
+    if not HealthCenter.query.get(id_puskesmas):
+        return jsonify({'error': 'id_puskesmas tidak ditemukan'}), 400
 
     # Buat reservasi tanpa id_antrian dulu
     r = Reservation(
@@ -65,21 +69,40 @@ def create_reservation():
 
     return jsonify({
         'message': 'Reservasi berhasil',
-        'nomor_antrian': q.nomor_antrian
+        'nomor_antrian': q.nomor_antrian,
+        'id_antrian': q.id_antrian,
+        'id_reservasi': r.id_reservasi
     }), 201
 
 @reservations_bp.route('/<int:id_reservasi>', methods=['PUT', 'OPTIONS'], strict_slashes=False)
 def update_reservation(id_reservasi):
     r = Reservation.query.get_or_404(id_reservasi)
     data = request.json
-    r.id_user = data.get('id_user', r.id_user)
-    r.id_puskesmas = data.get('id_puskesmas', r.id_puskesmas)
-    r.id_layanan = data.get('id_layanan', r.id_layanan)
-    r.id_antrian = data.get('id_antrian', r.id_antrian)
-    r.tanggal_reservasi = data.get('tanggal_reservasi', r.tanggal_reservasi)
-    r.status = data.get('status', r.status)
+    # Jika status ingin di-cancel, hanya update status saja
+    if data.get('status') == 'cancelled':
+        r.status = 'cancelled'
+        db.session.commit()
+        return jsonify({'id_reservasi': r.id_reservasi, 'status': r.status})
+    # Hanya izinkan update tanggal_reservasi (reschedule)
+    if 'tanggal_reservasi' not in data:
+        return jsonify({'error': 'tanggal_reservasi wajib diisi untuk reschedule'}), 400
+    old_tanggal = r.tanggal_reservasi
+    r.tanggal_reservasi = data['tanggal_reservasi']
     db.session.commit()
-    return jsonify({'id_reservasi': r.id_reservasi})
+
+    # Update waktu_antrian di Queue jika ada
+    if r.id_antrian:
+        q = Queue.query.get(r.id_antrian)
+        if q:
+            from datetime import datetime
+            try:
+                tanggal_obj = datetime.fromisoformat(data['tanggal_reservasi'])
+                q.waktu_antrian = tanggal_obj.time()
+                db.session.commit()
+            except Exception as e:
+                return jsonify({'error': f'Format tanggal_reservasi tidak valid: {str(e)}'}), 400
+
+    return jsonify({'id_reservasi': r.id_reservasi, 'old_tanggal_reservasi': str(old_tanggal), 'new_tanggal_reservasi': str(r.tanggal_reservasi)})
 
 @reservations_bp.route('/<int:id_reservasi>', methods=['DELETE', 'OPTIONS'], strict_slashes=False)
 def delete_reservation(id_reservasi):

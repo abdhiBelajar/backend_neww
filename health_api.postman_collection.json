@@ -514,7 +514,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nama_puskesmas\": \"Puskesmas A\",\n  \"alamat\": \"Alamat\",\n  \"jam_operasional\": \"2024-06-01T08:00:00\",\n  \"nomor_kontak\": \"08123456789\",\n  \"id_dokter\": 1\n}"
+              "raw": "{\n  \"kode_faskes\": 1,\n  \"nama_puskesmas\": \"Puskesmas A\",\n  \"alamat\": \"Alamat\",\n  \"jam_operasional\": {\n    \"Senin\": {\"buka\": \"08:00\", \"tutup\": \"14:00\"},\n    \"Selasa\": {\"buka\": \"08:00\", \"tutup\": \"14:00\"},\n    \"Rabu\": {\"buka\": \"08:00\", \"tutup\": \"14:00\"},\n    \"Kamis\": {\"buka\": \"08:00\", \"tutup\": \"14:00\"},\n    \"Jumat\": {\"buka\": \"08:00\", \"tutup\": \"11:00\"},\n    \"Sabtu\": {\"buka\": \"08:00\", \"tutup\": \"12:00\"},\n    \"Minggu\": {\"tutup\": true}\n  },\n  \"nomor_kontak\": \"08123456789\",\n  \"id_dokter\": 1\n}"
             },
             "url": {
               "raw": "http://localhost:5000/api/v1/health_centers/",
@@ -533,7 +533,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nama_puskesmas\": \"Puskesmas B\"\n}"
+              "raw": "{\n  \"nama_puskesmas\": \"Puskesmas B\",\n  \"jam_operasional\": {\n    \"Senin\": {\"buka\": \"08:00\", \"tutup\": \"14:00\"},\n    \"Selasa\": {\"buka\": \"08:00\", \"tutup\": \"14:00\"},\n    \"Rabu\": {\"buka\": \"08:00\", \"tutup\": \"14:00\"},\n    \"Kamis\": {\"buka\": \"08:00\", \"tutup\": \"14:00\"},\n    \"Jumat\": {\"buka\": \"08:00\", \"tutup\": \"11:00\"},\n    \"Sabtu\": {\"buka\": \"08:00\", \"tutup\": \"12:00\"},\n    \"Minggu\": {\"tutup\": true}\n  }\n}"
             },
             "url": {
               "raw": "http://localhost:5000/api/v1/health_centers/1",

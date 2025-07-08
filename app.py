@@ -15,6 +15,7 @@ from api.health_centers.endpoints import health_centers_bp
 from api.doctors.endpoints import doctors_bp
 from api.doctor_schedules.endpoints import doctor_schedules_bp
 from api.data_protected.endpoints import data_protected_bp
+from api.auth_endpoints import auth_bp
 
 load_dotenv()  # Membaca file .env
 
@@ -47,6 +48,7 @@ def register_blueprints(app):
     app.register_blueprint(doctors_bp, url_prefix='/api/v1/doctors')
     app.register_blueprint(doctor_schedules_bp, url_prefix='/api/v1/doctor_schedules')
     app.register_blueprint(data_protected_bp, url_prefix='/api/v1/protected')
+    app.register_blueprint(auth_bp)  # tanpa prefix, agar endpoint /api/auth/logout
 
 register_blueprints(app)
 

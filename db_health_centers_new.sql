@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jul 06, 2025 at 12:59 PM
+-- Generation Time: Jul 08, 2025 at 02:38 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.2.27
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `db_kesehatan`
+-- Database: `db_health_centers`
 --
 
 -- --------------------------------------------------------
@@ -38,9 +38,6 @@ CREATE TABLE `doctors` (
 -- Dumping data for table `doctors`
 --
 
-INSERT INTO `doctors` (`id_dokter`, `nomor_str`, `nama_dokter`, `spesialis`) VALUES
-(1, '12', 'ega', 'bedah otak');
-
 -- --------------------------------------------------------
 
 --
@@ -55,6 +52,10 @@ CREATE TABLE `doctor_schedules` (
   `jam_selesai` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `doctor_schedules`
+--
+
 -- --------------------------------------------------------
 
 --
@@ -62,10 +63,11 @@ CREATE TABLE `doctor_schedules` (
 --
 
 CREATE TABLE `health_centers` (
+  `id_puskesmas` int NOT NULL,
   `kode_faskes` int NOT NULL,
   `nama_puskesmas` varchar(255) NOT NULL,
   `alamat` varchar(255) NOT NULL,
-  `jam_operasional` datetime DEFAULT NULL,
+  `jam_operasional` json DEFAULT NULL,
   `nomor_kontak` text,
   `id_dokter` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -73,10 +75,6 @@ CREATE TABLE `health_centers` (
 --
 -- Dumping data for table `health_centers`
 --
-
-INSERT INTO `health_centers` (`kode_faskes`, `nama_puskesmas`, `alamat`, `jam_operasional`, `nomor_kontak`, `id_dokter`) VALUES
-(1, 'sukses', 'jl.udayana', '2025-07-03 00:08:36', '0184612411234', 1),
-(2, 'Puskesmas B', 'sibang kaje', '2024-06-01 08:00:00', '08123456139', 1);
 
 -- --------------------------------------------------------
 
@@ -108,10 +106,6 @@ CREATE TABLE `queues` (
 -- Dumping data for table `queues`
 --
 
-INSERT INTO `queues` (`id_antrian`, `id_reservasi`, `nomor_antrian`, `waktu_antrian`) VALUES
-(4, 4, 1, '10:00:00'),
-(5, 6, 1, '10:00:00');
-
 -- --------------------------------------------------------
 
 --
@@ -132,12 +126,6 @@ CREATE TABLE `reservations` (
 -- Dumping data for table `reservations`
 --
 
-INSERT INTO `reservations` (`id_reservasi`, `id_user`, `id_puskesmas`, `id_layanan`, `id_antrian`, `tanggal_reservasi`, `status`) VALUES
-(4, 1, 1, 1, 4, '2024-06-01 10:00:00', 'confirmed'),
-(5, 3, 1, 1, 4, '2024-06-01 10:00:00', 'confirmed'),
-(6, 3, 2, 1, NULL, '2024-06-01 10:00:00', 'pending'),
-(7, 3, 2, 1, NULL, '2024-06-01 10:00:00', 'pending');
-
 -- --------------------------------------------------------
 
 --
@@ -155,9 +143,6 @@ CREATE TABLE `services` (
 -- Dumping data for table `services`
 --
 
-INSERT INTO `services` (`id_layanan`, `nama_layanan`, `deskripsi`, `tarif`) VALUES
-(1, 'tht', 'tengorokan-hidung-telinga', '5000000.00');
-
 -- --------------------------------------------------------
 
 --
@@ -174,11 +159,6 @@ CREATE TABLE `users` (
 --
 -- Dumping data for table `users`
 --
-
-INSERT INTO `users` (`id_user`, `username`, `password`, `tipe_user`) VALUES
-(1, 'admin', 'scrypt:32768:8:1$Wa0gv7C04EMnOpWL$39857f789200ccfa6d6adcab5f53891507020beef9987b2a36673e71e1d7cfbbef3a963695629c3f1d1e2047b3ae365e0e90eb3d9fd0a0f4e05340dc187eb002', 'admin'),
-(2, 'teststaff', 'scrypt:32768:8:1$okmG3NG1bf1vW7L5$38aab616fe8ba6d54614f4f1b43c2eedcf3c6160c833e33aa1a8f56a384d3e4bfb169fb6e0b73462d35df9ae55137393f18e00b4530c6b890c3434c365f79690', 'staff'),
-(3, 'testpatien', 'scrypt:32768:8:1$D6SCeirmDOWnlLcp$a70d619962c99c7bc1a8f322f47356e03dfd8db5017949fff28316cfca0e85ceb8c9e888d6b8c2f6764cc16c32ffb1b7ef7265d3627b16110c1096cb85c53619', 'patien');
 
 --
 -- Indexes for dumped tables
@@ -202,7 +182,7 @@ ALTER TABLE `doctor_schedules`
 -- Indexes for table `health_centers`
 --
 ALTER TABLE `health_centers`
-  ADD PRIMARY KEY (`kode_faskes`),
+  ADD PRIMARY KEY (`id_puskesmas`),
   ADD KEY `id_dokter` (`id_dokter`);
 
 --
@@ -249,19 +229,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `doctors`
 --
 ALTER TABLE `doctors`
-  MODIFY `id_dokter` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_dokter` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `doctor_schedules`
 --
 ALTER TABLE `doctor_schedules`
-  MODIFY `id_jadwal` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_jadwal` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `health_centers`
 --
 ALTER TABLE `health_centers`
-  MODIFY `kode_faskes` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_puskesmas` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `notifications`
@@ -273,25 +253,25 @@ ALTER TABLE `notifications`
 -- AUTO_INCREMENT for table `queues`
 --
 ALTER TABLE `queues`
-  MODIFY `id_antrian` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_antrian` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `reservations`
 --
 ALTER TABLE `reservations`
-  MODIFY `id_reservasi` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_reservasi` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `services`
 --
 ALTER TABLE `services`
-  MODIFY `id_layanan` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_layanan` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id_user` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_user` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Constraints for dumped tables
@@ -301,34 +281,34 @@ ALTER TABLE `users`
 -- Constraints for table `doctor_schedules`
 --
 ALTER TABLE `doctor_schedules`
-  ADD CONSTRAINT `doctor_schedules_ibfk_1` FOREIGN KEY (`nomor_str`) REFERENCES `doctors` (`nomor_str`);
+  ADD CONSTRAINT `doctor_schedules_ibfk_1` FOREIGN KEY (`nomor_str`) REFERENCES `doctors` (`nomor_str`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `health_centers`
 --
 ALTER TABLE `health_centers`
-  ADD CONSTRAINT `health_centers_ibfk_1` FOREIGN KEY (`id_dokter`) REFERENCES `doctors` (`id_dokter`);
+  ADD CONSTRAINT `health_centers_ibfk_1` FOREIGN KEY (`id_dokter`) REFERENCES `doctors` (`id_dokter`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `notifications`
 --
 ALTER TABLE `notifications`
-  ADD CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
+  ADD CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `queues`
 --
 ALTER TABLE `queues`
-  ADD CONSTRAINT `queues_ibfk_1` FOREIGN KEY (`id_reservasi`) REFERENCES `reservations` (`id_reservasi`);
+  ADD CONSTRAINT `queues_ibfk_1` FOREIGN KEY (`id_reservasi`) REFERENCES `reservations` (`id_reservasi`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `reservations`
 --
 ALTER TABLE `reservations`
-  ADD CONSTRAINT `reservations_ibfk_1` FOREIGN KEY (`id_antrian`) REFERENCES `queues` (`id_antrian`),
-  ADD CONSTRAINT `reservations_ibfk_2` FOREIGN KEY (`id_puskesmas`) REFERENCES `health_centers` (`kode_faskes`),
-  ADD CONSTRAINT `reservations_ibfk_3` FOREIGN KEY (`id_layanan`) REFERENCES `services` (`id_layanan`),
-  ADD CONSTRAINT `reservations_ibfk_4` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
+  ADD CONSTRAINT `fk_reservations_id_puskesmas` FOREIGN KEY (`id_puskesmas`) REFERENCES `health_centers` (`id_puskesmas`) ON DELETE CASCADE,
+  ADD CONSTRAINT `reservations_ibfk_1` FOREIGN KEY (`id_antrian`) REFERENCES `queues` (`id_antrian`) ON DELETE CASCADE,
+  ADD CONSTRAINT `reservations_ibfk_3` FOREIGN KEY (`id_layanan`) REFERENCES `services` (`id_layanan`) ON DELETE CASCADE,
+  ADD CONSTRAINT `reservations_ibfk_4` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
