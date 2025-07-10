@@ -87,20 +87,20 @@ def update_reservation(id_reservasi):
     if 'tanggal_reservasi' not in data:
         return jsonify({'error': 'tanggal_reservasi wajib diisi untuk reschedule'}), 400
     old_tanggal = r.tanggal_reservasi
-    r.tanggal_reservasi = data['tanggal_reservasi']
+    from datetime import datetime
+    try:
+        tanggal_obj = datetime.fromisoformat(data['tanggal_reservasi'])
+    except Exception as e:
+        return jsonify({'error': f'Format tanggal_reservasi tidak valid: {str(e)}'}), 400
+    r.tanggal_reservasi = tanggal_obj
     db.session.commit()
 
     # Update waktu_antrian di Queue jika ada
     if r.id_antrian:
         q = Queue.query.get(r.id_antrian)
         if q:
-            from datetime import datetime
-            try:
-                tanggal_obj = datetime.fromisoformat(data['tanggal_reservasi'])
-                q.waktu_antrian = tanggal_obj.time()
-                db.session.commit()
-            except Exception as e:
-                return jsonify({'error': f'Format tanggal_reservasi tidak valid: {str(e)}'}), 400
+            q.waktu_antrian = tanggal_obj.time()
+            db.session.commit()
 
     return jsonify({'id_reservasi': r.id_reservasi, 'old_tanggal_reservasi': str(old_tanggal), 'new_tanggal_reservasi': str(r.tanggal_reservasi)})
 
@@ -118,13 +118,19 @@ def get_reservations_for_staff(id_user):
     puskesmas_ids = [p[0] for p in assigned_puskesmas]
     # Ambil semua reservasi untuk puskesmas-puskesmas tersebut
     reservations = Reservation.query.filter(Reservation.id_puskesmas.in_(puskesmas_ids)).all()
-    # Kembalikan data reservasi (bisa join ke tabel lain jika perlu)
-    return jsonify([
-        {
+    result = []
+    for r in reservations:
+        # Ambil nama layanan dari relasi service
+        nama_layanan = r.service.nama_layanan if r.service else None
+        # Ambil nomor antrian dari relasi queue
+        nomor_antrian = r.queue.nomor_antrian if r.queue else None
+        result.append({
             'id_reservasi': r.id_reservasi,
             'id_user': r.id_user,
             'id_puskesmas': r.id_puskesmas,
             'tanggal_reservasi': r.tanggal_reservasi.strftime('%Y-%m-%d %H:%M:%S'),
-            'status': r.status
-        } for r in reservations
-    ])
+            'status': r.status,
+            'layanan': nama_layanan,
+            'nomor_antrian': nomor_antrian
+        })
+    return jsonify(result)
